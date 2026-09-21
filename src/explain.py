@@ -8,7 +8,8 @@ def top_drivers(model, x_row, k=5):
     x_t = prep.transform(pd.DataFrame([x_row]))
     names = prep.get_feature_names_out()
     coefs = clf.coef_[0]
-    contrib = x_t.toarray()[0] * coefs
+    x_row_t = x_t.toarray()[0] if hasattr(x_t, "toarray") else np.asarray(x_t)[0]
+    contrib = x_row_t * coefs
     idx = np.argsort(np.abs(contrib))[::-1][:k]
     return [(names[i], float(contrib[i])) for i in idx]
 
