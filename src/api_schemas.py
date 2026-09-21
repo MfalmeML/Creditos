@@ -9,6 +9,19 @@ class Applicant(BaseModel):
     purpose: str
     checking_status: str
     savings_status: str
+    credit_history: str
+    personal_status: str
+    other_parties: str
+    residence_since: int
+    property_magnitude: str
+    other_payment_plans: str
+    housing: str
+    existing_credits: int
+    job: str
+    num_dependents: int
+    own_telephone: str
+    foreign_worker: str
+    installment_commitment: int
 
 class Decision(BaseModel):
     approved: bool
