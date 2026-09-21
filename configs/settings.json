@@ -1,0 +1,7 @@
+{
+  "risk_appetite_max_ecl": 2000.0,
+  "min_profit": 0.0,
+  "fairness_min_parity": 0.8,
+  "origination_latency_ms": 3000,
+  "drift_alpha": 0.05
+}
