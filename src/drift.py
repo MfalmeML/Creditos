@@ -3,10 +3,15 @@ import pandas as pd
 from scipy.stats import ks_2samp
 
 def data_drift(ref, cur, cols=None, alpha=0.05):
-    cols = cols or ref.columns
+    if cols is None:
+        cols = ref.select_dtypes(include='number').columns
     rows = []
     for c in cols:
-        stat, p = ks_2samp(ref[c].dropna(), cur[c].dropna())
+        ref_c, cur_c = ref[c].dropna(), cur[c].dropna()
+        if len(ref_c) == 0 or len(cur_c) == 0:
+            rows.append({'feature': c, 'ks': None, 'p': None, 'drift': False})
+            continue
+        stat, p = ks_2samp(ref_c, cur_c)
         rows.append({'feature': c, 'ks': stat, 'p': p, 'drift': p < alpha})
     return pd.DataFrame(rows)
 
