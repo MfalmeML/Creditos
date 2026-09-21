@@ -12,9 +12,11 @@ def decide(applicant, current_decision_fn, rollout_pct=0.0):
     return final
 
 if __name__ == '__main__':
+    import json
+    from pathlib import Path
+
     def current(a):
         return 5000
-    print(decide({'age': 35, 'credit_amount': 8000, 'duration': 24,
-                  'employment': '1<=X<4', 'purpose': 'radio/tv',
-                  'checking_status': '0<=X<200', 'savings_status': '<100'},
-                 current, rollout_pct=1.0))
+
+    sample = json.loads(Path('configs/sample_applicant.json').read_text())
+    print(decide(sample, current, rollout_pct=1.0))
