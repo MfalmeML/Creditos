@@ -12,6 +12,10 @@ MODEL = joblib.load('models/pd_baseline.joblib')
 
 def score(applicant: dict):
     x = pd.DataFrame([applicant])
+    expected = set(getattr(MODEL, 'feature_names_in_', []))
+    missing = expected - set(applicant.keys())
+    if missing:
+        raise ValueError(f"applicant is missing required fields: {sorted(missing)}")
     pd_hat = float(MODEL.predict_proba(x)[:, 1][0])
     lgd = float(estimate_lgd(1).iloc[0])
     ead = float(estimate_ead([applicant.get('credit_amount', 0)]).iloc[0])
