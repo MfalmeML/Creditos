@@ -1,0 +1,9 @@
+{
+  "age": 35,
+  "credit_amount": 8000,
+  "duration": 24,
+  "employment": "1<=X<4",
+  "purpose": "radio/tv",
+  "checking_status": "0<=X<200",
+  "savings_status": "<100"
+}
