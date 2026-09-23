@@ -1,9 +1,6 @@
-import sys
 import pandas as pd
 import joblib
 from src.uplift import TLearner
-
-sys.modules['__main__'].TLearner = TLearner
 
 
 def treatment_effect(model, x_row):
