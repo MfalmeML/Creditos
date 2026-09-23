@@ -4,6 +4,7 @@ from pathlib import Path
 
 SHADOW_LOG = Path('data/shadow_decisions.jsonl')
 
+
 def log_shadow(applicant, model_decision, current_decision):
     SHADOW_LOG.parent.mkdir(exist_ok=True)
     rec = {
@@ -14,6 +15,7 @@ def log_shadow(applicant, model_decision, current_decision):
     }
     with SHADOW_LOG.open('a') as f:
         f.write(json.dumps(rec) + '\n')
+
 
 if __name__ == '__main__':
     log_shadow({'age': 35}, {'limit': 10000}, {'limit': 5000})

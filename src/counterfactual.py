@@ -1,6 +1,7 @@
 import pandas as pd
 import joblib
 
+
 def counterfactual(model, x_row, feature, new_value):
     x2 = dict(x_row)
     x2[feature] = new_value
@@ -9,6 +10,7 @@ def counterfactual(model, x_row, feature, new_value):
     return {'feature': feature, 'from': x_row[feature], 'to': new_value,
             'pd_before': float(p1), 'pd_after': float(p2),
             'delta': float(p2 - p1)}
+
 
 if __name__ == '__main__':
     from sklearn.datasets import fetch_openml

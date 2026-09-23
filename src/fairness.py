@@ -1,12 +1,15 @@
 import pandas as pd
 
+
 def approval_rate_parity(df, group_col, decision_col='approved'):
     return df.groupby(group_col)[decision_col].mean().rename('approval_rate')
+
 
 def error_rate_parity(df, group_col, y_true='y', y_pred='yhat'):
     df = df.copy()
     df['err'] = (df[y_true] != df[y_pred]).astype(int)
     return df.groupby(group_col)['err'].mean().rename('error_rate')
+
 
 if __name__ == '__main__':
     d = pd.DataFrame({

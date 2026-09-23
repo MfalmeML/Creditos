@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from scipy.stats import ks_2samp
 
+
 def data_drift(ref, cur, cols=None, alpha=0.05):
     if cols is None:
         cols = ref.select_dtypes(include='number').columns
@@ -14,6 +15,7 @@ def data_drift(ref, cur, cols=None, alpha=0.05):
         stat, p = ks_2samp(ref_c, cur_c)
         rows.append({'feature': c, 'ks': stat, 'p': p, 'drift': p < alpha})
     return pd.DataFrame(rows)
+
 
 if __name__ == '__main__':
     rng = np.random.default_rng(0)

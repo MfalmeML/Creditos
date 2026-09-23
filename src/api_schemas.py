@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional
 
+
 class Applicant(BaseModel):
     age: int
     credit_amount: float
@@ -22,6 +23,7 @@ class Applicant(BaseModel):
     own_telephone: str
     foreign_worker: str
     installment_commitment: int
+
 
 class Decision(BaseModel):
     approved: bool

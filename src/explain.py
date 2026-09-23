@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import joblib
 
+
 def top_drivers(model, x_row, k=5):
     prep = model.named_steps['prep']
     clf = model.named_steps['clf']
@@ -12,6 +13,7 @@ def top_drivers(model, x_row, k=5):
     contrib = x_row_t * coefs
     idx = np.argsort(np.abs(contrib))[::-1][:k]
     return [(names[i], float(contrib[i])) for i in idx]
+
 
 if __name__ == '__main__':
     from sklearn.datasets import fetch_openml

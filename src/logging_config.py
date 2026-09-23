@@ -1,5 +1,6 @@
 import logging
 
+
 def get_logger(name):
     logger = logging.getLogger(name)
     if not logger.handlers:
@@ -8,6 +9,7 @@ def get_logger(name):
         logger.addHandler(h)
         logger.setLevel(logging.INFO)
     return logger
+
 
 if __name__ == '__main__':
     log = get_logger('creditos')

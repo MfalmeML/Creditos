@@ -2,9 +2,11 @@ import numpy as np
 import pandas as pd
 from sklearn.calibration import calibration_curve
 
+
 def calibration_report(y_true, y_prob, n_bins=10):
     frac_pos, mean_pred = calibration_curve(y_true, y_prob, n_bins=n_bins, strategy='quantile')
     return pd.DataFrame({'mean_pred': mean_pred, 'frac_pos': frac_pos})
+
 
 if __name__ == '__main__':
     import joblib

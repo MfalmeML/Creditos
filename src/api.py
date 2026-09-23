@@ -4,9 +4,11 @@ from src.predictor import score
 
 app = FastAPI(title='CreditOS Decision API')
 
+
 @app.get('/health')
 def health():
     return {'status': 'ok'}
+
 
 @app.post('/score', response_model=Decision)
 def score_endpoint(applicant: Applicant):

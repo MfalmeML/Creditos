@@ -10,6 +10,7 @@ from src.thin_file import is_thin_file
 
 MODEL = joblib.load('models/pd_baseline.joblib')
 
+
 def score(applicant: dict):
     x = pd.DataFrame([applicant])
     expected = set(getattr(MODEL, 'feature_names_in_', []))
@@ -31,6 +32,7 @@ def score(applicant: dict):
         'fallback': 'cashflow' if is_thin_file(applicant) else 'credit',
         'top_drivers': drivers,
     }
+
 
 if __name__ == '__main__':
     import json
