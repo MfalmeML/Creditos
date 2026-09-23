@@ -1,4 +1,3 @@
-import pandas as pd
 
 
 def is_thin_file(x_row, threshold_months=12):

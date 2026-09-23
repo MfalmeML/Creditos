@@ -1,4 +1,3 @@
-import pandas as pd
 import joblib
 from sklearn.datasets import fetch_openml
 from src.drift import data_drift

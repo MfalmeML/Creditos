@@ -1,4 +1,3 @@
-import pandas as pd
 
 FORBIDDEN = ['class', 'default', 'outcome', 'recovery', 'settled']
 

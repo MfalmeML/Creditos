@@ -13,10 +13,10 @@ def error_rate_parity(df, group_col, y_true='y', y_pred='yhat'):
 
 if __name__ == '__main__':
     d = pd.DataFrame({
-        'group': ['A','A','B','B','A','B'],
-        'approved': [1,0,1,0,1,0],
-        'y': [0,1,0,1,0,1],
-        'yhat': [0,1,1,1,0,0],
+        'group': ['A', 'A', 'B', 'B', 'A', 'B'],
+        'approved': [1, 0, 1, 0, 1, 0],
+        'y': [0, 1, 0, 1, 0, 1],
+        'yhat': [0, 1, 1, 1, 0, 0],
     })
     print(approval_rate_parity(d, 'group').to_string())
     print(error_rate_parity(d, 'group').to_string())

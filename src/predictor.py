@@ -1,6 +1,5 @@
 import pandas as pd
 import joblib
-import numpy as np
 from src.lgd import estimate_lgd
 from src.ead import estimate_ead
 from src.ecl import expected_credit_loss

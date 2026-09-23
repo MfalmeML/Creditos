@@ -1,4 +1,3 @@
-import pandas as pd
 from src.config import load_config
 
 

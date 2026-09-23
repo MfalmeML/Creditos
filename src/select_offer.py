@@ -1,4 +1,3 @@
-import pandas as pd
 from src.optimizer import simulate_offers
 from src.constraints import filter_offers
 

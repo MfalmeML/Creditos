@@ -1,5 +1,4 @@
 import numpy as np
-import pandas as pd
 
 
 def infer_rejects(approved_pd, rejected_pd, inflation=1.3):

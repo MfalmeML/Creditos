@@ -1,4 +1,3 @@
-import pandas as pd
 from sklearn.datasets import fetch_openml
 
 data = fetch_openml(name='credit-g', version=1, as_frame=True)
