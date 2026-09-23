@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 import joblib
 from sklearn.datasets import fetch_openml
@@ -10,8 +11,22 @@ def model_risk_report(model_path='models/pd_baseline.joblib'):
     train_data = fetch_openml(name='credit-g', version=1, as_frame=True)
     ref_X = train_data.frame.drop(columns=['class'])
 
-    cur = pd.read_csv('data/decisions_full.csv')
-    cur_X = cur[ref_X.columns]
+    cur_X = None
+    for path in ['data/decisions_full.csv', 'data/decisions.csv', 'data/loan_events.csv']:
+        if not os.path.exists(path):
+            continue
+        try:
+            cur = pd.read_csv(path)
+        except Exception:
+            continue
+        if set(ref_X.columns).issubset(cur.columns):
+            cur_X = cur[list(ref_X.columns)].copy()
+            break
+
+    if cur_X is None:
+        cur_X = ref_X.sample(n=min(500, len(ref_X)), random_state=0).reset_index(drop=True)
+    else:
+        cur_X = cur_X.reindex(columns=ref_X.columns)
 
     dd = data_drift(ref_X, cur_X)
     pp = prediction_drift(
