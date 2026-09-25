@@ -6,18 +6,18 @@ import sys
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 COMMANDS = {
-    'train-pd': ['python', '-m', 'src.train_pd'],
-    'train-pd-reject': ['python', '-m', 'src.train_pd_reject_aware'],
-    'ecl': ['python', '-m', 'src.pipeline_ecl'],
-    'decide': ['python', '-m', 'src.run_full_decisions'],
-    'survival': ['python', '-m', 'src.fit_hazards'],
-    'monitor': ['python', '-m', 'src.monitor_accounts'],
-    'uplift': ['python', '-m', 'src.uplift'],
-    'intervene': ['python', '-m', 'src.intervention'],
-    'fraud': ['python', '-m', 'src.fraud_credit_unified'],
-    'stress': ['python', '-m', 'src.stress_report'],
-    'governance': ['python', '-m', 'src.governance'],
-    'audit': ['python', '-m', 'src.audit'],
+    'train-pd': [sys.executable, '-m', 'src.train_pd'],
+    'train-pd-reject': [sys.executable, '-m', 'src.train_pd_reject_aware'],
+    'ecl': [sys.executable, '-m', 'src.pipeline_ecl'],
+    'decide': [sys.executable, '-m', 'src.run_full_decisions'],
+    'survival': [sys.executable, '-m', 'src.fit_hazards'],
+    'monitor': [sys.executable, '-m', 'src.monitor_accounts'],
+    'uplift': [sys.executable, '-m', 'src.uplift'],
+    'intervene': [sys.executable, '-m', 'src.intervention'],
+    'fraud': [sys.executable, '-m', 'src.fraud_credit_unified'],
+    'stress': [sys.executable, '-m', 'src.stress_report'],
+    'governance': [sys.executable, '-m', 'src.governance'],
+    'audit': [sys.executable, '-m', 'src.audit'],
     'serve': ['uvicorn', 'src.api:app', '--port', '8000'],
 }
 

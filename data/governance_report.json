@@ -1,0 +1,42 @@
+{
+  "model_risk": {
+    "data_drift_flagged": 0,
+    "prediction_drift": {
+      "ks": 0.019000000000000017,
+      "p": 0.9997059108529487,
+      "drift": false
+    }
+  },
+  "n_decisions": 1000,
+  "approval_rate": 0.975,
+  "stress": [
+    {
+      "scenario": "base",
+      "n": 2000,
+      "total_ecl": 95983.06244628956,
+      "mean_ecl": 47.991531223144776,
+      "mean_pd": 0.0161684189265352
+    },
+    {
+      "scenario": "mild_stress",
+      "n": 2000,
+      "total_ecl": 92343.60139964437,
+      "mean_ecl": 46.171800699822185,
+      "mean_pd": 0.0160297125704237
+    },
+    {
+      "scenario": "severe_stress",
+      "n": 2000,
+      "total_ecl": 86105.06642201648,
+      "mean_ecl": 43.05253321100824,
+      "mean_pd": 0.0157481009878451
+    },
+    {
+      "scenario": "combined_shock",
+      "n": 2000,
+      "total_ecl": 80919.57512197804,
+      "mean_ecl": 40.45978756098902,
+      "mean_pd": 0.0154637932811122
+    }
+  ]
+}
