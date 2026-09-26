@@ -11,7 +11,7 @@ from src.adapters.bureau import load_bureau
 
 
 df = load_bureau('data/application_train.csv')
-X = df.drop(columns=['target'])
+X = df.drop(columns=['target', 'CODE_GENDER'])
 y = df['target'].astype(int)
 
 cat_cols = X.select_dtypes(include=['category', 'object']).columns

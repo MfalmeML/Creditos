@@ -19,10 +19,20 @@ def load_bureau(path):
 
     df['target'] = df['TARGET']
 
+    bureau = pd.read_csv('data/bureau.csv')
+    agg = bureau.groupby('SK_ID_CURR').agg(
+        bureau_credit_count=('SK_ID_BUREAU', 'count'),
+        bureau_days_overdue_max=('CREDIT_DAY_OVERDUE', 'max'),
+        bureau_credit_sum=('AMT_CREDIT_SUM', 'sum'),
+    ).reset_index()
+    df = df.merge(agg, on='SK_ID_CURR', how='left')
+
     keep = [
         'age', 'credit_amount', 'duration', 'employment_years',
         'employment_type', 'AMT_INCOME_TOTAL', 'NAME_EDUCATION_TYPE',
         'NAME_FAMILY_STATUS', 'NAME_HOUSING_TYPE', 'CNT_CHILDREN',
-        'EXT_SOURCE_1', 'EXT_SOURCE_1_missing', 'EXT_SOURCE_2', 'EXT_SOURCE_3', 'target'
+        'EXT_SOURCE_1', 'EXT_SOURCE_1_missing', 'EXT_SOURCE_2', 'EXT_SOURCE_3',
+        'bureau_credit_count', 'bureau_days_overdue_max', 'bureau_credit_sum',
+        'CODE_GENDER', 'target'
     ]
     return df[keep].copy()
