@@ -1,23 +1,34 @@
-from sklearn.datasets import fetch_openml
-from sklearn.model_selection import train_test_split
+import joblib
+from sklearn.compose import ColumnTransformer
+from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import roc_auc_score
-from sklearn.preprocessing import OneHotEncoder
-from sklearn.compose import ColumnTransformer
+from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
-import joblib
+from sklearn.preprocessing import OneHotEncoder
 
-data = fetch_openml(name='credit-g', version=1, as_frame=True)
-df = data.frame
-X = df.drop(columns=['class'])
-y = (df['class'] == 'bad').astype(int)
+from src.adapters.bureau import load_bureau
+
+
+df = load_bureau('data/application_train.csv')
+X = df.drop(columns=['target'])
+y = df['target'].astype(int)
 
 cat_cols = X.select_dtypes(include=['category', 'object']).columns
 num_cols = X.select_dtypes(exclude=['category', 'object']).columns
 
+num_pipeline = Pipeline([
+    ('imputer', SimpleImputer(strategy='median'))
+])
+
+cat_pipeline = Pipeline([
+    ('imputer', SimpleImputer(strategy='most_frequent')),
+    ('onehot', OneHotEncoder(handle_unknown='ignore'))
+])
+
 preprocess = ColumnTransformer([
-    ('cat', OneHotEncoder(handle_unknown='ignore'), cat_cols),
-    ('num', 'passthrough', num_cols)
+    ('num', num_pipeline, num_cols),
+    ('cat', cat_pipeline, cat_cols),
 ])
 
 model = Pipeline([
