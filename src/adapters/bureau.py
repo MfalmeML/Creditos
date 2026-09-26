@@ -15,6 +15,7 @@ def load_bureau(path):
     employed = df['DAYS_EMPLOYED'].replace(365243, np.nan)
     df['employment_years'] = (-employed / 365).round(1)
     df['employment_type'] = df['NAME_INCOME_TYPE']
+    df['EXT_SOURCE_1_missing'] = df['EXT_SOURCE_1'].isna().astype(int)
 
     df['target'] = df['TARGET']
 
@@ -22,6 +23,6 @@ def load_bureau(path):
         'age', 'credit_amount', 'duration', 'employment_years',
         'employment_type', 'AMT_INCOME_TOTAL', 'NAME_EDUCATION_TYPE',
         'NAME_FAMILY_STATUS', 'NAME_HOUSING_TYPE', 'CNT_CHILDREN',
-        'EXT_SOURCE_1', 'EXT_SOURCE_2', 'EXT_SOURCE_3', 'target'
+        'EXT_SOURCE_1', 'EXT_SOURCE_1_missing', 'EXT_SOURCE_2', 'EXT_SOURCE_3', 'target'
     ]
     return df[keep].copy()
