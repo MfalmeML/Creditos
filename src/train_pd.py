@@ -5,7 +5,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import roc_auc_score
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import OneHotEncoder
+from sklearn.preprocessing import OneHotEncoder, RobustScaler
 
 from src.adapters.bureau import load_bureau
 
@@ -18,7 +18,8 @@ cat_cols = X.select_dtypes(include=['category', 'object']).columns
 num_cols = X.select_dtypes(exclude=['category', 'object']).columns
 
 num_pipeline = Pipeline([
-    ('imputer', SimpleImputer(strategy='median'))
+    ('imputer', SimpleImputer(strategy='median')),
+    ('scaler', RobustScaler())
 ])
 
 cat_pipeline = Pipeline([
