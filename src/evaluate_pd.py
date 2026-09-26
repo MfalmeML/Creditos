@@ -56,6 +56,9 @@ eval_df = pd.DataFrame({
 eval_df = eval_df[eval_df['gender'].isin(['M', 'F'])]
 
 print()
+print('Predicted PD distribution by gender:')
+print(pd.DataFrame({'gender': gender_test.values, 'pred_pd': probs}).groupby('gender')['pred_pd'].describe().to_string())
+print()
 print('Approval rate by gender:')
 print(approval_rate_parity(eval_df, 'gender').to_string())
 print()
