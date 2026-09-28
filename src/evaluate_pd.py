@@ -50,6 +50,7 @@ print(f'Fairness evaluation using threshold={threshold:.4f} (observed default ra
 eval_df = pd.DataFrame({
     'gender': gender_test.values,
     'y': y_test.values,
+    'pred_pd': probs,
     'yhat': (probs >= threshold).astype(int),
     'approved': (probs < threshold).astype(int),
 })
@@ -61,6 +62,14 @@ print(pd.DataFrame({'gender': gender_test.values, 'pred_pd': probs}).groupby('ge
 print()
 print('Approval rate by gender:')
 print(approval_rate_parity(eval_df, 'gender').to_string())
+
+f_thresh = eval_df.loc[eval_df['gender'] == 'F', 'y'].mean()
+m_thresh = eval_df.loc[eval_df['gender'] == 'M', 'y'].mean()
+f_approval_own = (eval_df.loc[eval_df['gender'] == 'F', 'pred_pd'] < f_thresh).mean()
+m_approval_own = (eval_df.loc[eval_df['gender'] == 'M', 'pred_pd'] < m_thresh).mean()
+print()
+print(f'Approval @ own base rate - F: {f_approval_own:.4f} (thresh {f_thresh:.4f})')
+print(f'Approval @ own base rate - M: {m_approval_own:.4f} (thresh {m_thresh:.4f})')
 print()
 print('Error rate by gender:')
 print(error_rate_parity(eval_df, 'gender').to_string())
