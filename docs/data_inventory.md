@@ -28,6 +28,23 @@
 	logic (`estimate_lgd`'s Beta-distribution draw, `fit_hazards.py`
 	untouched) and have not been, and currently cannot be, validated
 	against real outcomes.
+- **Synthetic event and intervention files:** `loan_events.csv` and
+	`intervention.csv` do exist, but they are not acquired performance
+	data. Their producer scripts (`src/synthetic_events.py` and
+	`src/synthetic_intervention.py`) generate seeded random records.
+	`loan_events.csv` contains 5,000 simulated rows with duration and
+	event codes (default, prepayment, or censoring), but no loan/customer
+	identifiers, calendar event dates, balances, or recovery amounts.
+	It can exercise survival/competing-risk code, but cannot validate it
+	against real outcomes or support real LGD estimation. The 8,000-row
+	`intervention.csv` is likewise simulated and does not establish a real
+	treatment experiment.
+- **Decision outputs:** `decisions_full.csv` is also not a real
+	production decision log. `src/run_full_decisions.py` constructs it
+	from OpenML German Credit rows, the project's ECL output, and simulated
+	decision logic. It has no source-system decision timestamps or verified
+	real applicant approvals, so its approval-rate statistics are not
+	empirical outcomes from the Home Credit population.
 - **Application events:** Yes. `application_train.csv` — one row per
 	application with applicant-level fields at time of application
 	(income, employment, credit amount requested, family status, etc.).

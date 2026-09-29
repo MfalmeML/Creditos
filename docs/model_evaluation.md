@@ -120,3 +120,67 @@ cutoff is.
   scoped artifact. Further capability work (uplift, survival models,
   monitoring) was deprioritized in favor of validating this one model on
   real data honestly.
+
+## 5. Path decision and final project status
+
+Per the project checklist's step 250, two paths were available: Path A
+(acquire real data for every stage within two weeks) or Path B (ship one
+honest, scoped artifact and stop).
+
+Before committing to either, every file in `data/` was inventoried and
+traced to its producer script, not judged by filename alone. Three files
+whose names suggested they might contain real loan-performance or
+experimental data were checked directly:
+
+- `loan_events.csv` — traced to `synthetic_events.py`. 5,000 seeded,
+  simulated rows. Has duration/event fields but no loan or customer
+  identifier, no calendar timestamps, no balances, no recovery amounts.
+- `intervention.csv` — traced to `synthetic_intervention.py`. 8,000
+  seeded, simulated rows. Not a real randomized treatment experiment.
+- `decisions_full.csv` — traced to `run_full_decisions.py`. Built from
+  OpenML German Credit rows plus this project's own simulated ECL
+  outputs. Not a real decision log.
+
+None of these unblock steps 243/245/246. This confirms, rather than
+assumes, that the project is on **Path B**.
+
+### What each synthetic file is still useful for
+
+A distinction worth keeping separate: these files can still exercise
+code paths even though they cannot validate outcomes against reality.
+
+- `loan_events.csv` lets `fit_hazards.py` be run and its output shape
+  checked (code-path verified) but says nothing about real default/
+  prepayment timing (not outcome-validated).
+- `intervention.csv` lets the `TLearner` uplift model be trained and
+  scored correctly (code-path verified, including the pickling fix
+  applied earlier in this project) but has never been checked against
+  a real randomized intervention (not outcome-validated).
+- `decisions_full.csv` lets `governance.py`'s reporting logic run
+  end-to-end (code-path verified) but its `n_decisions`/`approval_rate`
+  figures do not describe real decisions (not outcome-validated).
+
+Conflating "the code runs without error on this file" with "this result
+is validated against reality" was the exact failure mode this project's
+earlier synthetic-only phase was built on. Naming the two separately here
+is meant to prevent repeating it.
+
+### Final status
+
+- **Code complete:** yes. Modules, adapters, tests, API, and governance
+  reporting all exist and run.
+- **Project complete, per this project's own definition:** no. A
+  measured before/after reduction in credit loss on real borrowers has
+  not been produced and cannot be, absent real LGD/EAD/performance/
+  experiment data.
+- **What this artifact actually is:** a real-data PD model (Home Credit,
+  AUC 0.7340), calibrated and fairness-audited on real outcomes, with
+  every other stage (LGD, EAD, survival modeling, uplift) explicitly
+  documented as running on synthetic data and unvalidated against
+  reality.
+- **Next real step, if one is taken:** acquiring a genuine loan
+  performance table with dated repay/default/prepay outcomes and
+  recovery amounts — not writing more code against data that does not
+  exist. Until that data exists, further capability work on LGD, EAD,
+  hazards, or uplift is decoration, consistent with the project
+  checklist's own instruction.
