@@ -251,3 +251,47 @@ What this check proves and does not prove:
 
 Action: the three bureau aggregates are trained on as-is, with the timing
 caveat recorded. If any upstream contract becomes available, revisit.
+
+## Decision optimizer verification (item 8)
+
+Traced the full served decision path: predictor.py -> select_offer.py
+(pick_optimal) -> optimizer.py (simulate_offers) -> constraints.py
+(filter_offers). No bypass: the chain is real and is what api.py's
+/score endpoint actually calls.
+
+Findings:
+
+1. Candidate offers: three fixed offers (limit/rate/term), identical
+   for every applicant. Not applicant-derived — a fixed menu, not a
+   decision space.
+2. ECL is constant across all three candidates (`ecl = pd_ * lgd * ead`
+   inside the offer loop never references the candidate). The "risk"
+   side of the optimizer does not vary by offer; only revenue
+   (limit * rate * term) does. The optimizer selects highest revenue
+   from a fixed menu, not the risk-adjusted-optimal offer. This is the
+   root cause of the $20,000 limit returned earlier today for an
+   $8,000 request: candidate 3 has the highest revenue product of the
+   three fixed offers for every applicant, regardless of risk.
+3. constraints.py filters on ECL and profit only. Fairness and
+   calibration constraints, both required by the build plan's central
+   optimization problem, are absent. Because ECL is constant per
+   applicant, the ECL filter is all-or-nothing across the three
+   offers, not a differentiating per-offer filter.
+4. Selection mechanics (max-profit after filtering, explicit None on
+   empty) are correctly implemented, but operate on the flawed
+   candidate set above.
+5. predictor.py findings: LGD is a fresh random Beta(1) draw on every
+   call, unrelated to the applicant and non-deterministic between
+   identical requests. EAD is set to the requested credit amount with
+   no CCF applied, defensible for term loans, incorrect for revolving
+   products per the build plan's own EAD requirement.
+
+Status: the decision-optimizer code path is real (no bypass) but does
+not perform risk-adjusted offer optimization. It currently returns the
+same fixed-menu highest-revenue offer regardless of applicant risk.
+Both real fixes (per-candidate ECL, requiring per-offer EAD/exposure
+structure; fairness/calibration constraints, requiring population-
+level metrics wired into per-applicant filtering) are non-trivial and
+were deliberately not attempted this session, consistent with this
+project's decision not to layer synthetic fixes on top of data-blocked
+components. Documented as a known defect, not fixed.
