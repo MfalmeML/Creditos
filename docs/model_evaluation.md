@@ -340,3 +340,43 @@ per-candidate ECL:
    the selected offer differs in a way that tracks their PD difference.
    If both still receive the same offer, the fix did not address the
    root cause and needs re-diagnosis before being marked fixed.
+
+## Optimizer Fix A — applied and verified
+
+Change: `src/optimizer.py` — `simulate_offers` now computes
+EAD(candidate) = candidate limit, inside the offer loop, so ECL varies
+per candidate. Previously ECL was computed once per applicant and was
+constant across the three fixed offers, making the selector a pure
+revenue maximizer over a fixed menu.
+
+Contract change: `simulate_offers(pd_, lgd, ead, offers=OFFERS)`
+becomes `simulate_offers(pd_, lgd, offers=OFFERS)`. Corresponding
+mechanical drop of the `ead` argument in `src/select_offer.py`'s
+`pick_optimal`. `src/predictor.py` call updated to
+`pick_optimal(pd_hat, lgd)` and its sample config switched to
+`configs/sample_applicant_homecredit.json`.
+
+Item-6 success check (two applicants, same requested amount,
+EXT_SOURCE_1/2/3 varied to force materially different PD):
+
+- low_pd: pd=0.0045, limit=20000, term=36, profit=8977.91
+- high_pd: pd=0.5611, limit=10000, term=24, profit=1031.13
+- Condition 1 (offers differ): True
+- Condition 2 (direction, low_pd limit >= high_pd limit): True
+
+Fix A is verified against the pre-change spec's success condition.
+
+Still unresolved after Fix A, on record:
+
+- LGD remains a single random Beta draw per scoring call. Determinism
+  fix (spec item 2) is a separate step, not addressed here.
+- `src/run_decisions.py` and `src/run_full_decisions.py` still call
+  `pick_optimal` with three arguments and will raise TypeError if
+  invoked. `run_full_decisions.py` is reachable via
+  `python src/cli.py decide`; `run_decisions.py` has no current caller
+  (no reference in `src/cli.py` or `src/api.py`). Not fixed this
+  session, deferred, documented here.
+- `high_pd` at PD 0.5611 still receives a 10000/24 offer because
+  `constraints.py` caps ECL, not PD. Whether a PD cap belongs in the
+  constrained objective is a policy question, not a code defect.
+  Left as-is.
