@@ -220,3 +220,34 @@ Interpretation:
 This study is a bounded sensitivity result, not evidence that the model
 is validated for the population a real policy would decline. Both AUC
 figures are documented with the population each was measured on.
+
+## Point-in-time leakage check (Home Credit)
+
+Check run: `src/leakage_check.py` against `load_bureau('data/application_train.csv')`.
+
+Result:
+- 18 feature columns checked; label `target` present.
+- No feature name matches a forbidden post-outcome pattern.
+- No bureau-derived column outside the three allowed aggregates
+  (`bureau_credit_count`, `bureau_days_overdue_max`, `bureau_credit_sum`)
+  survived the merge.
+
+Review-required (timing unverified, not failures):
+- `bureau_days_overdue_max`: safe only if the bureau pull occurred at or
+  before the decision point. Home Credit does not disclose pull timing.
+- `bureau_credit_sum`: safe only if aggregated as of the application date.
+  Relative day offsets (`DAYS_CREDIT`, `DAYS_CREDIT_ENDDATE`) suggest
+  as-of-or-before application, but this is inferred from dataset
+  documentation, not verified against an upstream data contract.
+- `bureau_credit_count`: same caveat as `bureau_credit_sum`.
+
+What this check proves and does not prove:
+- Proves: no common post-outcome name pattern and no contract violation
+  in the merge produced by `src/adapters/bureau.py`.
+- Does NOT prove: absence of leakage. A feature with a benign name can
+  still be computed post-decision if the upstream aggregation window is
+  wrong. The name check catches common patterns; it is not a substitute
+  for a documented as-of timestamp on every upstream source.
+
+Action: the three bureau aggregates are trained on as-is, with the timing
+caveat recorded. If any upstream contract becomes available, revisit.
