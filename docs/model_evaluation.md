@@ -295,3 +295,48 @@ level metrics wired into per-applicant filtering) are non-trivial and
 were deliberately not attempted this session, consistent with this
 project's decision not to layer synthetic fixes on top of data-blocked
 components. Documented as a known defect, not fixed.
+
+## Optimizer fix — target behavior (Fix A, pre-change spec)
+
+Before any code change, the following is the stated target for
+per-candidate ECL:
+
+1. EAD per candidate: EAD for a candidate offer of limit L is assumed
+   equal to L (full-draw-at-origination). This is a defensible
+   simplification for term loans, which this project currently handles
+   exclusively. It is explicitly NOT valid for revolving credit, where
+   EAD is not the current balance (per the build plan, section 4). If
+   revolving products are ever added, this assumption must be revisited.
+
+2. LGD per call: a single LGD value is drawn once per applicant per
+   scoring call and reused across all three candidates in that call, so
+   identical requests return identical numbers. This is a determinism
+   fix, not a realism fix — LGD remains a synthetic Beta-distribution
+   draw, unvalidated against real recovery data, exactly as documented
+   elsewhere in this file. Determinism and realism are separate
+   properties; this change addresses only the former.
+
+3. Risk-adjusted selection means: select the candidate maximizing
+   expected profit, where profit = revenue - ECL, and ECL = PD * LGD *
+   EAD(candidate), varying per candidate via EAD(candidate) = candidate
+   limit.
+
+4. Per-candidate failure: a candidate with profit < min_profit or
+   ECL > max_ecl is filtered out individually by the existing
+   filter_offers logic — no change needed there. Call-level failure:
+   None is returned only when all three candidates are filtered out,
+   not on any single candidate's failure.
+
+5. Rollback condition: if this change produces implausible or worse
+   behavior when checked against the same sample applicants used in
+   today's audit, revert optimizer.py to the fixed-menu version,
+   document why, and stop — do not patch further in the same session.
+
+6. Success check, to run once the change lands, before this section is
+   marked done: score two applicants with the same requested amount but
+   materially different PD (e.g. a high-PD and low-PD sample from
+   configs/sample_applicant.json or similar). Confirm they no longer
+   both receive the $20,000/36-month candidate by default, and confirm
+   the selected offer differs in a way that tracks their PD difference.
+   If both still receive the same offer, the fix did not address the
+   root cause and needs re-diagnosis before being marked fixed.
