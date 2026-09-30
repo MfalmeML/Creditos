@@ -1,0 +1,19 @@
+{
+  "age": 35.0,
+  "credit_amount": 8000.0,
+  "duration": 24.0,
+  "employment_years": 4.0,
+  "employment_type": "Working",
+  "AMT_INCOME_TOTAL": 180000.0,
+  "NAME_EDUCATION_TYPE": "Secondary / secondary special",
+  "NAME_FAMILY_STATUS": "Married",
+  "NAME_HOUSING_TYPE": "House / apartment",
+  "CNT_CHILDREN": 1,
+  "EXT_SOURCE_1": 0.5,
+  "EXT_SOURCE_1_missing": 0,
+  "EXT_SOURCE_2": 0.6,
+  "EXT_SOURCE_3": 0.55,
+  "bureau_credit_count": 3,
+  "bureau_days_overdue_max": 0,
+  "bureau_credit_sum": 45000.0
+}

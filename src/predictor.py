@@ -20,7 +20,7 @@ def score(applicant: dict):
     lgd = float(estimate_lgd(1).iloc[0])
     ead = float(estimate_ead([applicant.get('credit_amount', 0)]).iloc[0])
     ecl = float(expected_credit_loss([pd_hat], [lgd], [ead]).iloc[0])
-    best = pick_optimal(pd_hat, lgd, ead)
+    best = pick_optimal(pd_hat, lgd)
     drivers = top_drivers(MODEL, applicant, k=3)
     return {
         'pd': pd_hat, 'lgd': lgd, 'ead': ead, 'ecl': ecl,
@@ -36,5 +36,5 @@ def score(applicant: dict):
 if __name__ == '__main__':
     import json
     from pathlib import Path
-    sample = json.loads(Path('configs/sample_applicant.json').read_text())
+    sample = json.loads(Path('configs/sample_applicant_homecredit.json').read_text())
     print(score(sample))
