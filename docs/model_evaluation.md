@@ -184,3 +184,39 @@ is meant to prevent repeating it.
   exist. Until that data exists, further capability work on LGD, EAD,
   hazards, or uplift is decoration, consistent with the project
   checklist's own instruction.
+
+## Reject-inference sensitivity study (Home Credit)
+
+Baseline AUC on general approved test split: 0.7340
+Boundary threshold: 0.15 (illustrative decline boundary for this study only)
+Approved share: 87.10%
+Declined share: 12.90%
+TARGET among would-decline: 22.55%
+TARGET among would-approve: 5.93%
+
+Baseline AUC on approved-only holdout:     0.6785
+Reject-aware AUC on approved-only holdout: 0.6787
+Delta:                                     +0.0001
+
+Interpretation:
+- The 0.7340 figure measures discrimination across the full applicant
+  population as observed in this dataset. It remains the documented
+  baseline for that population.
+- The 0.6785 figure measures discrimination within the subset of
+  applicants the baseline model itself would approve at an illustrative
+  threshold (PD > 0.15). This threshold was chosen for this sensitivity
+  study only and has not been validated against any real underwriting
+  policy. A different threshold would produce a different number.
+  Neither figure is more correct than the other; they answer different
+  questions about different populations.
+- Parcelling reject inference changed the approved-holdout AUC by
+  +0.0001. This is a demonstration of the mechanism, not a correction
+  of survivorship bias.
+- Home Credit contains only originated loans. No technique can recover
+  the true declined-applicant population from this dataset. Real
+  correction requires declined records with their decision-time features
+  and eventual outcomes.
+
+This study is a bounded sensitivity result, not evidence that the model
+is validated for the population a real policy would decline. Both AUC
+figures are documented with the population each was measured on.
