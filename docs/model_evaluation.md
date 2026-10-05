@@ -380,3 +380,34 @@ Still unresolved after Fix A, on record:
   `constraints.py` caps ECL, not PD. Whether a PD cap belongs in the
   constrained objective is a policy question, not a code defect.
   Left as-is.
+
+## LGD placeholder in served path — fixed
+
+Change: `src/predictor.py` no longer calls `estimate_lgd(1)` inside
+`score()`. It uses `LGD_PLACEHOLDER = 2 / 7`, a stated constant equal
+to the mean of the synthetic Beta(2, 5) generator used elsewhere in
+the project.
+
+Why: `estimate_lgd(1, seed=42)` was already deterministic per call —
+verified, not assumed. The defect was not nondeterminism; it was that
+the served path used one arbitrary draw from that distribution
+(0.24395464376443093) and applied it identically to every applicant,
+presenting a stochastic-looking value that was neither the
+distribution mean nor applicant-derived nor learned.
+
+What this fixes: the served path now uses a value that is honest about
+what it is — a stated placeholder, not a per-applicant estimate.
+
+What this does not fix: LGD remains synthetic. It is not learned from
+real recovery or collections data, which this dataset does not contain.
+Replace `LGD_PLACEHOLDER` with a real LGD model when recovery data
+becomes available.
+
+Verification:
+- lgd on two identical `score()` calls: 0.2857142857142857 (both)
+- 2/7 = 0.2857142857142857
+- offers identical across the two calls: True
+
+`estimate_lgd` remains in `src/lgd.py` for the non-served pipelines
+(event simulation, stress scenarios) and now carries a docstring
+stating it is not to be used in the served path.
