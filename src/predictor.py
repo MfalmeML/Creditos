@@ -1,6 +1,6 @@
 import pandas as pd
 import joblib
-from src.lgd import estimate_lgd
+from src.lgd import LGD_PLACEHOLDER
 from src.ead import estimate_ead
 from src.ecl import expected_credit_loss
 from src.select_offer import pick_optimal
@@ -17,7 +17,7 @@ def score(applicant: dict):
     if missing:
         raise ValueError(f"applicant is missing required fields: {sorted(missing)}")
     pd_hat = float(MODEL.predict_proba(x)[:, 1][0])
-    lgd = float(estimate_lgd(1).iloc[0])
+    lgd = float(LGD_PLACEHOLDER)
     ead = float(estimate_ead([applicant.get('credit_amount', 0)]).iloc[0])
     ecl = float(expected_credit_loss([pd_hat], [lgd], [ead]).iloc[0])
     best = pick_optimal(pd_hat, lgd)
