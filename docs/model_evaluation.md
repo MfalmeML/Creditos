@@ -440,3 +440,9 @@ Not fixed, documented as stale:
 Restoring `decide` requires replacing the German Credit input path with
 Home Credit inputs (`load_bureau`) and rebuilding the record loop. That
 is a spec-and-change cycle, not a mechanical fix, and is deferred.
+
+Correction (same session): the CLI change described above was not
+included in commit ed9e7cd. That commit contained only this doc section.
+The `decide` entry was removed from `src/cli.py` in the following
+commit, after this note was appended. The change is real; the commit
+record is split across two commits rather than one.
