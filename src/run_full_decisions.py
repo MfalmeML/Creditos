@@ -14,7 +14,7 @@ ecl_df = pd.read_csv('data/ecl_output.csv')
 records = []
 for i, row in X.iterrows():
     r = ecl_df.iloc[i]
-    best = pick_optimal(r['pd'], r['lgd'], r['ead'])
+    best = pick_optimal(r['pd'], r['lgd'])
     drivers = top_drivers(model, row.to_dict(), k=3)
     cf = counterfactual(model, row.to_dict(), 'credit_amount', row['credit_amount'] * 0.5)
     records.append({
