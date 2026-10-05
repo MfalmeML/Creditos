@@ -411,3 +411,32 @@ Verification:
 `estimate_lgd` remains in `src/lgd.py` for the non-served pipelines
 (event simulation, stress scenarios) and now carries a docstring
 stating it is not to be used in the served path.
+
+## CLI decide command removed — stale pipeline
+
+Change: `src/cli.py`'s `COMMANDS` dict no longer includes the `decide`
+entry, which invoked `python -m src.run_full_decisions`.
+
+Reason: `run_full_decisions.py` has two independent defects and has
+never run correctly since the Home Credit swap:
+
+1. It loads German Credit (`fetch_openml('credit-g')`) at line 9.
+2. It loads the Home Credit `models/pd_baseline.joblib` at line 11.
+3. At line 18 it passes German Credit rows to the Home Credit model's
+   `top_drivers`, which raises ValueError because the Home Credit
+   `ColumnTransformer` expects Home Credit columns.
+
+An earlier commit (`fea6a8a`) fixed the `pick_optimal` signature in this
+file and in `run_decisions.py`, but the input/model mismatch was never
+addressed and is not a one-line fix.
+
+Not fixed, documented as stale:
+- `src/run_full_decisions.py` remains in the tree but is no longer
+  reachable via the CLI.
+- `src/run_decisions.py` runs but reads German Credit inputs
+  (`data/ecl_output.csv`) and produces meaningless Home Credit decisions.
+  It is not currently reachable via any CLI or API entry point.
+
+Restoring `decide` requires replacing the German Credit input path with
+Home Credit inputs (`load_bureau`) and rebuilding the record loop. That
+is a spec-and-change cycle, not a mechanical fix, and is deferred.
