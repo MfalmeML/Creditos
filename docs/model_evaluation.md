@@ -368,14 +368,16 @@ Fix A is verified against the pre-change spec's success condition.
 
 Still unresolved after Fix A, on record:
 
-- LGD remains a single random Beta draw per scoring call. Determinism
-  fix (spec item 2) is a separate step, not addressed here.
-- `src/run_decisions.py` and `src/run_full_decisions.py` still call
-  `pick_optimal` with three arguments and will raise TypeError if
-  invoked. `run_full_decisions.py` is reachable via
-  `python src/cli.py decide`; `run_decisions.py` has no current caller
-  (no reference in `src/cli.py` or `src/api.py`). Not fixed this
-  session, deferred, documented here.
+- LGD in the served path: superseded by "LGD placeholder in served
+  path — fixed" below. The served path now uses a stated constant,
+  LGD_PLACEHOLDER = 2/7. LGD remains synthetic and is not learned
+  from real recovery data.
+- `src/run_decisions.py` and `src/run_full_decisions.py` signature
+  drift: superseded by commit `fea6a8a`, which corrected both call
+  sites. `run_full_decisions.py` remains stale for a different reason
+  (German Credit inputs against a Home Credit model) and is documented
+  in "CLI decide command removed" below. `run_decisions.py` runs but
+  produces meaningless output for the same input mismatch.
 - `high_pd` at PD 0.5611 still receives a 10000/24 offer because
   `constraints.py` caps ECL, not PD. Whether a PD cap belongs in the
   constrained objective is a policy question, not a code defect.
